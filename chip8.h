@@ -30,23 +30,23 @@ class Chip8{
        bool exec(); //returns true unless fail
 
     private:
-    
-        bool display[128][64] = {false}; //monocrhome display as a 2d array (large size)
+
+        std::array<std::array<bool, 64>, 128> display{}; //monocrhome display as a 2d array (large size)
         uint16_t pc = 0x200; //program counter current instruction
         uint16_t i = 0; //index register to point to locs in memory
         uint8_t delay_timer = 0; //incrementing towards 0
         uint8_t sound_timer = 0; //sound timer (when not zero sound plays)
         bool key_state[16] = {false}; //the state of each key
         std::array<uint8_t, 4096> memory{}; // 4KiB of contiguous memory
-        std::stack<uint16_t> stack;
+        std::stack<uint8_t> stack;
         std::array<uint8_t, 16> v{}; //variable register arr where index 15 is carry register (VF)
 
 
 
         //screen and flow (returns status and what was pushed or pop)
         bool clearScreen(); //00E0 - clear all pixels
-        uint16_t push(); //2NNN - set pc to NNN, add to stack, return NNN
-        uint16_t pop(); //00EE - pop last address from stack, set PC to that address, return address
+        void push(); //2NNN - set pc to NNN, add to stack, return NNN
+        void pop(); //00EE - pop last address from stack, set PC to that address, return address
 
         //conditional skips (returns evaluation of the prompt)
         bool equals(uint8_t val); //3XNN - will skip one instruction if the value in VX is equal to NN 

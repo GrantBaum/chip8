@@ -1,14 +1,20 @@
 #include "chip8.h"
 
+//screen and flow
 bool Chip8::clearScreen(){
-
+    display.fill(false);
+    return true;
 }
-uint16_t Chip8::push(){
-
+void Chip8::push(uint8_t nnn){
+    stack.push(pc);
+    pc = nnn;
 }
-uint16_t Chip8::pop(){
-
+void Chip8::pop(){
+    pc = stack.top();
+    stack.pop();
 }
+
+//conditional skips
 bool Chip8::equals(uint8_t val){
 
 }
@@ -97,5 +103,5 @@ uint8_t Chip8::set_dt(){
 
 }
 uint8_t Chip8::set_st(){
-    
+
 }
