@@ -7,7 +7,12 @@
 
 //implementation of public methods from the class
 Chip8::Chip8(){
-    
+    i = 0x050; //memory address is set to 50
+    for(int j = 0; j < font.size(); j++, i++){
+        memory.at(i) = font.at(j);
+    }
+
+    i = 0; //resetting register.
 }
 
 //byte methods
@@ -44,19 +49,19 @@ bool Chip8::getBit(int x, int y) const{
     if(x <= 128 && y <= 64){
         return display[x][y];
     }
-    else throw std::runtime_exception("Bit to retreive is out of range");
+    else throw std::runtime_error("Bit to retreive is out of range");
 }
 void Chip8::setBit(int x, int y){
     if(x <= 128 && y <= 64){
         display[x][y] = true;
     }
-    else throw std::runtime_exception("Bit to set is out of range");
+    else throw std::runtime_error("Bit to set is out of range");
 }
 void Chip8::clearBit(int x, int y){
     if(x <= 128 && y <= 64){
         display[x][y] = false;
     }
-    else throw std::runtime_exception("Bit to clear is out of range");
+    else throw std::runtime_error("Bit to clear is out of range");
 }
 
 //void Chip8::clock();
@@ -83,7 +88,7 @@ void Chip8::load(const char *program){
     }
 
     char byte;
-    i = 0x200; //set the index register to where we wanna start
+    i = pc; //set the index register to where programs start
     while(rom.get(byte)){
         memory.at(i) = static_cast<uint8_t>(byte);
         i++;
