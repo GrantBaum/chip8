@@ -1,0 +1,10 @@
+# build output
+chip8
+test_load
+*.o
+
+# ROMs
+*.ch8
+
+# editor
+.vscode/
