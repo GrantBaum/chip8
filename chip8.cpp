@@ -7,12 +7,12 @@
 
 //implementation of public methods from the class
 Chip8::Chip8(){
-    i = 0x050; //memory address is set to 50
+    i = FONT_ADDR;
     for(int j = 0; j < font.size(); j++, i++){
         memory.at(i) = font.at(j);
     }
 
-    i = 0; //resetting register.
+    i = 0; //resetting register
 }
 
 //byte methods
@@ -99,4 +99,14 @@ void Chip8::load(const char *program){
     
 }
 
-//bool Chip8::exec(uint8_t code);
+bool Chip8::exec(){
+    //process of setting the code to the instruction
+    uint16_t code = memory.at(pc);
+    pc++;
+    code = code << 8;
+    code = code | memory.at(pc);
+    pc++;
+    
+
+    
+}
