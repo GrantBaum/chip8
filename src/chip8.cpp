@@ -36,12 +36,12 @@ bool Chip8::clearByte(uint16_t addr){
 }
 
 void Chip8::setKey(uint8_t key){
-    if(key < 0x10 && key > 0){
+    if(key < 0x10){
         key_state[key] = true;
     }
 }
 void Chip8::clearKey(uint8_t key){
-    if(key < 0x10 && key > 0){
+    if(key < 0x10){
         key_state[key] = false;
     }
 }
@@ -120,9 +120,11 @@ void Chip8::exec(){
         case 0x0:
             if(nn == 0xEE){
                 pop(); //00EE
+                break;
             }
             else if(nn == 0xE0){
                 clearScreen(); //00E0
+                break;
             }
             else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
@@ -158,30 +160,39 @@ void Chip8::exec(){
         case 0x8:
             if(n == 0){
                 set_to_reg(x, y); //8XY0
+                break;
             }
             else if(n == 0x1){
                 logic_or(x, y); //8XY1
+                break;
             }
             else if(n == 0x2){
                 logic_and(x, y); //8XY2
+                break;
             }
             else if(n == 0x3){
                 logic_xor(x, y); //8XY3
+                break;
             }
             else if(n == 0x4){
                 add(x, y); //8XY4
+                break;
             }
             else if(n == 0x5){
                 subtr(x, y); //8XY5
+                break;
             }
             else if(n == 0x6){
                 rshift(x); //8XY6
+                break;
             }
             else if(n == 0x7){
-                lshift(x); //8XY7
+                reverse_subtr(x, y); //8XY7
+                break;
             }
             else if(n == 0xE){
-                reverse_subtr(x, y); //8XYE
+                lshift(x); //8XYE
+                break;
             }
             else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
@@ -208,10 +219,12 @@ void Chip8::exec(){
 
         case 0xE:
             if(nn == 0x9E){
-                skip_if_key(x); //EX98
+                skip_if_key(x); //EX9E
+                break;
             }
             else if(nn == 0xA1){
                 skip_not_key(x); //EX1A
+                break;
             }
             else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
@@ -219,30 +232,39 @@ void Chip8::exec(){
         case 0xF:
             if(nn == 0x07){
                 get_dt(x); //FX07
+                break;
             }
             else if(nn == 0x15){
                 set_dt(x); //FX15
+                break;
             }
             else if(nn == 0x18){
                 set_st(x); //FX18
+                break;
             }
             else if(nn == 0x29){
                 font_char(x); //FX29
+                break;
             }
             else if(nn == 0x33){
                 decimal_conv(x); //FX33
+                break;
             }
             else if(nn == 0x55){
                 cache_regs(x); //FX55
+                break;
             }
             else if(nn == 0x65){
                 fetch_regs(x); //FX65
+                break;
             }
             else if(nn == 0x0A){
                 wait_key(x); //FX0A
+                break;
             }
             else if(nn == 0x1E){
                 add_index(x); //FX1E
+                break;
             }
             else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;

@@ -1,5 +1,6 @@
 #include "chip8.h"
 #include <random>
+#include <iostream>
 #include <stdexcept>
 
 //random number gen
@@ -17,7 +18,7 @@ void Chip8::clearScreen(){
     display = {}; //sets everything to false or 0
 }
 void Chip8::push(uint16_t val){
-    if(stack.size() > 16){
+    if(stack.size() >= 16){
         throw std::runtime_error("Stack overflow error!");
     }
     else{
@@ -71,12 +72,15 @@ void Chip8::set_to_reg(uint8_t x, uint8_t y){
 }
 void Chip8::logic_or(uint8_t x, uint8_t y){
     v.at(x) = v.at(x) | v.at(y);
+    v.at(0xF) = 0;
 }
 void Chip8::logic_and(uint8_t x, uint8_t y){
     v.at(x) = v.at(x) & v.at(y);
+    v.at(0xF) = 0;
 }
 void Chip8::logic_xor(uint8_t x, uint8_t y){
     v.at(x) = v.at(x) ^ v.at(y);
+    v.at(0xF) = 0;
 }
 void Chip8::add(uint8_t x, uint8_t y){
     uint16_t sum = v.at(x) + v.at(y);
@@ -90,12 +94,14 @@ void Chip8::add(uint8_t x, uint8_t y){
     }
 }
 void Chip8::subtr(uint8_t x, uint8_t y){
-    if(v.at(y) <= v.at(x)){
+    uint8_t X = v.at(x);
+    uint8_t Y = v.at(y);
+    if(Y <= X){
         v.at(0xF) = 1;
     }
     else v.at(0xF) = 0;
 
-    if(x != 0xF) v.at(x) = v.at(x) - v.at(y);
+    if(x != 0xF) v.at(x) = X - Y;
     
 }
 void Chip8::rshift(uint8_t x){
@@ -109,12 +115,15 @@ void Chip8::lshift(uint8_t x){
     if(x != 0xF) v.at(x) = v.at(x) << 1;
 }
 void Chip8::reverse_subtr(uint8_t x, uint8_t y){
-    if(v.at(x) <= v.at(y)){
+    uint8_t X = v.at(x);
+    uint8_t Y = v.at(y);
+
+    if(X <= Y){
         v.at(0xF) = 1;
     }
     else v.at(0xF) = 0;
 
-    if(x != 0xF) v.at(x) = v.at(y) - v.at(x);
+    if(x != 0xF) v.at(x) = Y - X;
 }
 
 //index and memory
