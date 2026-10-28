@@ -84,24 +84,18 @@ void Chip8::subtr(uint8_t x, uint8_t y){
     }
     else v.at(0xF) = 0;
 
-    if(x != 0xF){
-        v.at(x) = v.at(x) - v.at(y);
-    }
+    if(x != 0xF) v.at(x) = v.at(x) - v.at(y);
     
 }
 void Chip8::rshift(uint8_t x){
     ((v.at(x) & 0x01) != 0) ? v.at(0xF) = 1 : v.at(0xF) = 0;
 
-    if(x != 0xF){
-        v.at(x) = v.at(x) >> 1;
-    }
+    if(x != 0xF) v.at(x) = v.at(x) >> 1;
 }
 void Chip8::lshift(uint8_t x){
     ((v.at(x) & 0x80) != 0) ? v.at(0xF) = 1 : v.at(0xF) = 0;
 
-    if(x != 0xF){
-        v.at(x) = v.at(x) << 1;
-    }
+    if(x != 0xF) v.at(x) = v.at(x) << 1;
 }
 void Chip8::reverse_subtr(uint8_t x, uint8_t y){
     if(v.at(x) <= v.at(y)){
@@ -109,7 +103,7 @@ void Chip8::reverse_subtr(uint8_t x, uint8_t y){
     }
     else v.at(0xF) = 0;
 
-    v.at(x) = v.at(y) - v.at(x);
+    if(x != 0xF) v.at(x) = v.at(y) - v.at(x);
 }
 
 //index and memory
@@ -121,13 +115,16 @@ uint16_t Chip8::add_index(uint8_t x, uint8_t val){
     i += v.at(x);
     return i;
 }
-uint16_t Chip8::font_char(){
-    //TODO
-    return 1;
+uint16_t Chip8::font_char(uint8_t x){
+    i = FONT_ADDR + (v.at(x) & 0x0F) * 5;
+    return i;
 }
-uint8_t Chip8::decimal_conv(){
-    //TODO
-    return 1;
+}
+void Chip8::decimal_conv(uint8_t x){
+    uint8_t val = v.at(x);
+    memory.at(i)     = val / 100;         //hundreds
+    memory.at(i + 1) = (val / 10) % 10;   //tens
+    memory.at(i + 2) = val % 10;          //ones
 }
 
 //heap memory
@@ -177,14 +174,12 @@ void Chip8::wait_key(uint8_t x, uint8_t key){
 }
 
 //timers
-uint8_t Chip8::get_dt(){
-    return delay_timer;
+void Chip8::get_dt(){
+    v.at(x) = delay_timer;
 }
-uint8_t Chip8::set_dt(uint8_t x){
+void Chip8::set_dt(uint8_t x){
     delay_timer = v.at(x);
-    return delay_timer;
 }
-uint8_t Chip8::set_st(uint8_t x){
+void Chip8::set_st(uint8_t x){
     sound_timer = v.at(x);
-    return sound_timer;
 }

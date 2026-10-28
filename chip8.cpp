@@ -64,7 +64,10 @@ void Chip8::clearBit(int x, int y){
     else throw std::runtime_error("Bit to clear is out of range");
 }
 
-//void Chip8::clock();
+void Chip8::clock(){
+    if(delay_timer > 0) delay_timer--;
+    if(sound_timer > 0) sound_timer--;
+}
 
 bool Chip8::play_sound(){
     if(sound_timer != 0){

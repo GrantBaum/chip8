@@ -75,8 +75,8 @@ class Chip8{
         //index and memory (these will return indicies where I ends up or what gets stored)
         uint16_t set_index(uint16_t val); //ANNN - set I to NNN
         uint16_t add_index(uint8_t x, uint8_t val); //FX1E - add VX to I
-        uint16_t font_char(); //FX29 - set I to font char for a hex number
-        uint8_t decimal_conv(); //FX33 - store VX as 3 decimal digits at I, I+1 and I+2
+        uint16_t font_char(uint8_t x); //FX29 - set I to font char for a hex number in VX
+        void decimal_conv(uint8_t x); //FX33 - store VX as 3 decimal digits at I, I+1 and I+2
 
         //heap memory
         /*this occurs when the registers need to be dumped in memory or vise versa. make sure it goes to the next availible address
@@ -97,8 +97,8 @@ class Chip8{
         void wait_key(uint8_t x, uint8_t key); //FX0A - Wait for a key, then store it in VX
 
         //timers
-        uint8_t get_dt(); //FX07 - set VX to delay timer
-        uint8_t set_dt(uint8_t x); //FX15 - set delay timer to VX
-        uint8_t set_st(uint8_t x); //FX18 - set sound timer to VX
+        void get_dt(uint8_t x); //FX07 - set VX to delay timer
+        void set_dt(uint8_t x); //FX15 - set delay timer to VX
+        void set_st(uint8_t x); //FX18 - set sound timer to VX
         
 };
