@@ -4,6 +4,7 @@
 #include <fstream>
 #include <cstdint>
 #include <stdexcept> // Required for standard exceptions
+#include <format>
 
 //implementation of public methods from the class
 Chip8::Chip8(){
@@ -76,33 +77,31 @@ bool Chip8::play_sound(){
     else return false;
 }
 void Chip8::load(const char *program){
-    std::ifstream rom; //starting ifstream called rom
-    rom.open(program, std::ios::binary);
+    std::ifstream rom(program, std::ios::binary);
 
     if(!rom.is_open()) {
-        std::cerr << "Failed to open program!" << std::endl;
+        throw std::runtime_error("Failed to open ROM: " + std::string(program));
     }
 
-    size_t fileSize = static_cast<size_t>(rom.tellg()); //file size of program
-    rom.seekg(0, std::ios::beg); //set reading pointer to beginning
+    rom.seekg(0, std::ios::end); //jump to the end to get the size
+    size_t fileSize = static_cast<size_t>(rom.tellg());
+    rom.seekg(0, std::ios::beg); //back to the start for reading
 
     if(fileSize > PGM_MAX_SIZE){
-        std::cerr << "Program does not fit into ROM!" << std::endl;
+        throw std::runtime_error("ROM too big: " + std::string(program));
     }
 
     char byte;
-    i = pc; //set the index register to where programs start
+    uint16_t addr = 0x200; //programs start here
     while(rom.get(byte)){
-        memory.at(i) = static_cast<uint8_t>(byte);
-        i++;
+        memory.at(addr) = static_cast<uint8_t>(byte);
+        addr++;
     }
 
-    std::cout << "Successfully loaded program! Next free index at address: " << std::hex << i << std::endl;
-    i = 0; //reset index register.
-    
+    std::cout << "Loaded " << std::dec << fileSize << " bytes. Next free address: 0x" << std::hex << addr << std::dec << std::endl;
 }
 
-bool Chip8::exec(){
+void Chip8::exec(){
     //process of setting the code to the instruction
     uint16_t code = memory.at(pc);
     pc++;
@@ -125,7 +124,7 @@ bool Chip8::exec(){
             else if(nn == 0xE0){
                 clearScreen(); //00E0
             }
-            else throw std::runtime_error("Invalid instruction: " + code);
+            else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
 
         case 0x1: //1NNN
@@ -184,7 +183,7 @@ bool Chip8::exec(){
             else if(n == 0xE){
                 reverse_subtr(x, y); //8XYE
             }
-            else throw std::runtime_error("Invalid instruction: " + code);
+            else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
 
         case 0x9: //9XY0
@@ -214,7 +213,7 @@ bool Chip8::exec(){
             else if(nn == 0xA1){
                 skip_not_key(x); //EX1A
             }
-            else throw std::runtime_error("Invalid instruction: " + code);
+            else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
 
         case 0xF:
@@ -236,7 +235,7 @@ bool Chip8::exec(){
             else if(nn == 0x55){
                 cache_regs(x); //FX55
             }
-            else if(nn = 0x65){
+            else if(nn == 0x65){
                 fetch_regs(x); //FX65
             }
             else if(nn == 0x0A){
@@ -245,11 +244,11 @@ bool Chip8::exec(){
             else if(nn == 0x1E){
                 add_index(x); //FX1E
             }
-            else throw std::runtime_error("Invalid instruction: " + code);
+            else throw std::runtime_error(std::format("Invalid instruction: {:04X} at pc {:03X}", code, pc - 2));
             break;
 
         default:
-            throw std::runtime_error("Unknown instruction error occured!")
+            throw std::runtime_error("Unknown instruction error occured!");
             break;
     }
 }

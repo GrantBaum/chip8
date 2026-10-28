@@ -18,7 +18,7 @@ void Chip8::clearScreen(){
 }
 void Chip8::push(uint16_t val){
     if(stack.size() > 16){
-        throw std::runtime_error("Stack overflow error!")
+        throw std::runtime_error("Stack overflow error!");
     }
     else{
         stack.push(pc);
@@ -27,7 +27,7 @@ void Chip8::push(uint16_t val){
 }
 void Chip8::pop(){
     if(stack.empty()){
-        throw std::runtime_error("Returned from an empty stack!")
+        throw std::runtime_error("Returned from an empty stack!");
     }
     else{
         pc = stack.top();
@@ -130,7 +130,6 @@ uint16_t Chip8::font_char(uint8_t x){
     i = FONT_ADDR + (v.at(x) & 0x0F) * 5;
     return i;
 }
-}
 void Chip8::decimal_conv(uint8_t x){
     uint8_t val = v.at(x);
     memory.at(i)     = val / 100;         //hundreds
@@ -226,7 +225,7 @@ void Chip8::wait_key(uint8_t x){
 }
 
 //timers
-void Chip8::get_dt(){
+void Chip8::get_dt(uint8_t x){
     v.at(x) = delay_timer;
 }
 void Chip8::set_dt(uint8_t x){

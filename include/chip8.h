@@ -5,8 +5,6 @@
 
 class Chip8{
 
-    friend struct Chip8Test;
-
     public:
         Chip8(); //constructor
     
@@ -28,7 +26,7 @@ class Chip8{
        void clock();
        bool play_sound();
        void load(const char *program); //returns true unless fail
-       bool exec(); //returns true unless fail
+       void exec(); //returns true unless fail
 
     private:
 
@@ -96,7 +94,7 @@ class Chip8{
 
         //jumps and random
         uint16_t jump(uint16_t val); //1NNN - set pc to NNN, return nnn
-        uint16_t jump_o(uint16_t val) //BNNN - set pc to NNN + V0, return pc
+        uint16_t jump_o(uint16_t val); //BNNN - set pc to NNN + V0, return pc
         void random(uint8_t x, uint8_t val); //CXNN - set VX to RANDOM_NUM & NN
 
         //drawing
