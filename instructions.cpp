@@ -74,26 +74,37 @@ void Chip8::add(uint8_t x, uint8_t y){
     }
     else v.at(0xF) = 0;
 
-    v.at(x) = static_cast<uint8_t>(sum);
+    if(x != 0xF){
+        v.at(x) = static_cast<uint8_t>(sum);
+    }
 }
 void Chip8::subtr(uint8_t x, uint8_t y){
-    if(v.at(y) >= v.at(x)){
+    if(v.at(y) <= v.at(x)){
         v.at(0xF) = 1;
     }
     else v.at(0xF) = 0;
 
-    v.at(x) = v.at(x) - v.at(y);
+    if(x != 0xF){
+        v.at(x) = v.at(x) - v.at(y);
+    }
+    
 }
 void Chip8::rshift(uint8_t x){
     ((v.at(x) & 0x01) != 0) ? v.at(0xF) = 1 : v.at(0xF) = 0;
-    v.at(x) = v.at(x) >> 1;
+
+    if(x != 0xF){
+        v.at(x) = v.at(x) >> 1;
+    }
 }
 void Chip8::lshift(uint8_t x){
     ((v.at(x) & 0x80) != 0) ? v.at(0xF) = 1 : v.at(0xF) = 0;
-    v.at(x) = v.at(x) << 1;
+
+    if(x != 0xF){
+        v.at(x) = v.at(x) << 1;
+    }
 }
 void Chip8::reverse_subtr(uint8_t x, uint8_t y){
-    if(v.at(x) >= v.at(y)){
+    if(v.at(x) <= v.at(y)){
         v.at(0xF) = 1;
     }
     else v.at(0xF) = 0;
