@@ -30,7 +30,7 @@ class Chip8{
 
     private:
 
-        std::array<std::array<bool, 64>, 128> display{}; //monocrhome display as a 2d array (large size)
+        std::array<std::array<bool, 32>, 64> display{}; //monocrhome display as a 2d array (large size)
         uint16_t pc = 0x200; //program counter current instruction
         uint16_t i = 0; //index register to point to locs in memory
         uint8_t delay_timer = 0; //incrementing towards 0
