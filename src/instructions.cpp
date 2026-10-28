@@ -122,7 +122,7 @@ uint16_t Chip8::set_index(uint16_t val){
     i = val; //nnn
     return i;
 }
-uint16_t Chip8::add_index(uint8_t x, uint8_t val){
+uint16_t Chip8::add_index(uint8_t x){
     i += v.at(x);
     return i;
 }
@@ -155,8 +155,12 @@ uint16_t Chip8::jump(uint16_t val){
     pc = val;
     return pc;
 }
-uint16_t Chip8::random(uint8_t x){
-    return random_num() & v.at(x);
+uint16_t Chip8::jump_o(uint16_t val){
+    pc = val + v.at(0);
+    return pc;
+}
+void Chip8::random(uint8_t x, uint8_t val){
+    v.at(x) = random_num() & val;
 }
 
 //drawing
@@ -189,23 +193,36 @@ void Chip8::draw(uint8_t x, uint8_t y, uint8_t val){
 }
 
 //keys
-void Chip8::skip_if_key(uint8_t x, uint8_t key){
+void Chip8::skip_if_key(uint8_t x){
     if(key_state.at(v.at(x)) == true){
         pc += 2;
     }
 }
-void Chip8::skip_not_key(uint8_t x, uint8_t key){
+void Chip8::skip_not_key(uint8_t x){
     if(key_state.at(v.at(x)) == false){
         pc += 2;
     }
 }
-void Chip8::wait_key(uint8_t x, uint8_t key){
-    while(true){
-        if(key_state.at(v.at(x)) == false){
-            continue;
+void Chip8::wait_key(uint8_t x){
+    //waiting for a key to go down
+    if(held_key == -1){
+        for(int k = 0; k < 16; k++){
+            if(key_state[k]){
+                held_key = k; //remember it, now wait for release
+                break;
+            }
         }
-        else break;
+        pc -= 2; //run this instruction again next exec
+        return;
     }
+    //a key went down, wait for it to come back up
+    if(key_state[held_key]){
+        pc -= 2; //still held, keep waiting
+        return;
+    }
+    //released, store it and move on
+    v.at(x) = held_key;
+    held_key = -1;
 }
 
 //timers

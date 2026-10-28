@@ -9,9 +9,7 @@ class Chip8{
 
     public:
         Chip8(); //constructor
-        const uint16_t PGM_MAX_SIZE = 3584; //MAX PROGRAM SIZE IN BYTES
-        const uint16_t FONT_ADDR = 0x050;
-
+    
         //byte methods
         uint8_t getByte(uint16_t addr) const; //read only and only one that returns int
         bool setByte(uint16_t addr, uint8_t byte); //needs to know what to set
@@ -44,6 +42,18 @@ class Chip8{
         std::stack<uint16_t> stack;
         std::array<uint8_t, 16> v{}; //variable register arr where index 15 is carry register (VF)
 
+        int8_t held_key = -1; //FX0A: key we're waiting to be released, -1 means none
+
+        //constants
+        const uint16_t PGM_MAX_SIZE = 3584; //MAX PROGRAM SIZE IN BYTES
+        const uint16_t FONT_ADDR = 0x050;
+        static const uint16_t OP_MASK = 0xF000;
+        static const uint16_t X_MASK = 0x0F00;
+        static const uint16_t Y_MASK = 0x00F0;
+        static const uint16_t N_MASK = 0x000F;
+        static const uint16_t NN_MASK = 0x00FF;
+        static const uint16_t NNN_MASK = 0x0FFF;
+
         uint16_t random_num(); //random number header declaration
 
         //screen and flow (returns what was pushed or pop)
@@ -74,7 +84,7 @@ class Chip8{
 
         //index and memory (these will return indicies where I ends up or what gets stored)
         uint16_t set_index(uint16_t val); //ANNN - set I to NNN
-        uint16_t add_index(uint8_t x, uint8_t val); //FX1E - add VX to I
+        uint16_t add_index(uint8_t x); //FX1E - add VX to I
         uint16_t font_char(uint8_t x); //FX29 - set I to font char for a hex number in VX
         void decimal_conv(uint8_t x); //FX33 - store VX as 3 decimal digits at I, I+1 and I+2
 
@@ -86,15 +96,16 @@ class Chip8{
 
         //jumps and random
         uint16_t jump(uint16_t val); //1NNN - set pc to NNN, return nnn
-        uint16_t random(uint8_t x); //CXNN - set VX to RANDOM_NUM & NN
+        uint16_t jump_o(uint16_t val) //BNNN - set pc to NNN + V0, return pc
+        void random(uint8_t x, uint8_t val); //CXNN - set VX to RANDOM_NUM & NN
 
         //drawing
         void draw(uint8_t x, uint8_t y, uint8_t val); //DXYN - Draw an N-row sprite from memory at I, at position (VX, VY). Pixels XOR onto the screen. VF = 1 if any pixel got turned off
 
         //keys
-        void skip_if_key(uint8_t x, uint8_t key); //EX9E - Skip next instruction if the key in VX is pressed
-        void skip_not_key(uint8_t x, uint8_t key); //EX1A - Skip next instruction if the key in VX is not pressed
-        void wait_key(uint8_t x, uint8_t key); //FX0A - Wait for a key, then store it in VX
+        void skip_if_key(uint8_t x); //EX9E - Skip next instruction if the key in VX is pressed
+        void skip_not_key(uint8_t x); //EX1A - Skip next instruction if the key in VX is not pressed
+        void wait_key(uint8_t x); //FX0A - Wait for a key, then store it in VX
 
         //timers
         void get_dt(uint8_t x); //FX07 - set VX to delay timer

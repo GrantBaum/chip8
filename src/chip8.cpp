@@ -101,7 +101,7 @@ void Chip8::load(const char *program){
     i = 0; //reset index register.
     
 }
-/*
+
 bool Chip8::exec(){
     //process of setting the code to the instruction
     uint16_t code = memory.at(pc);
@@ -109,5 +109,147 @@ bool Chip8::exec(){
     code = code << 8;
     code = code | memory.at(pc);
     pc++;
+
+    uint16_t op_nibble = (code & OP_MASK) >> 12;
+    uint16_t x = (code & X_MASK) >> 8;
+    uint16_t y = (code & Y_MASK) >> 4;
+    uint16_t n = code & N_MASK;
+    uint16_t nn = code & NN_MASK;
+    uint16_t nnn = code & NNN_MASK;
+
+    switch(op_nibble){
+        case 0x0:
+            if(nn == 0xEE){
+                pop(); //00EE
+            }
+            else if(nn == 0xE0){
+                clearScreen(); //00E0
+            }
+            else throw std::runtime_error("Invalid instruction: " + code);
+            break;
+
+        case 0x1: //1NNN
+            jump(nnn);
+            break;
+
+        case 0x2: //2NNN
+            push(nnn);
+            break;
+
+        case 0x3: //3XNN
+            skp_equals(x, nn);
+            break;
+
+        case 0x4: //4XNN
+            skp_nequals(x, nn);
+            break;
+
+        case 0x5: //5XY0
+            skp_iftrue(x, y);
+            break;
+
+        case 0x6: //6XNN
+            set_reg(x, nn);
+            break;
+
+        case 0x7: //7XNN
+            add_reg(x, nn);
+            break;
+
+        case 0x8:
+            if(n == 0){
+                set_to_reg(x, y); //8XY0
+            }
+            else if(n == 0x1){
+                logic_or(x, y); //8XY1
+            }
+            else if(n == 0x2){
+                logic_and(x, y); //8XY2
+            }
+            else if(n == 0x3){
+                logic_xor(x, y); //8XY3
+            }
+            else if(n == 0x4){
+                add(x, y); //8XY4
+            }
+            else if(n == 0x5){
+                subtr(x, y); //8XY5
+            }
+            else if(n == 0x6){
+                rshift(x); //8XY6
+            }
+            else if(n == 0x7){
+                lshift(x); //8XY7
+            }
+            else if(n == 0xE){
+                reverse_subtr(x, y); //8XYE
+            }
+            else throw std::runtime_error("Invalid instruction: " + code);
+            break;
+
+        case 0x9: //9XY0
+            skp_iffalse(x, y);
+            break;
+
+        case 0xA: //ANNN
+            set_index(nnn);
+            break;
+
+        case 0xB: //BNNN
+            jump_o(nnn);
+            break;
+
+        case 0xC: //CXNN
+            random(x, nn);
+            break;
+
+        case 0xD: //DXYN
+            draw(x, y, n);
+            break;
+
+        case 0xE:
+            if(nn == 0x9E){
+                skip_if_key(x); //EX98
+            }
+            else if(nn == 0xA1){
+                skip_not_key(x); //EX1A
+            }
+            else throw std::runtime_error("Invalid instruction: " + code);
+            break;
+
+        case 0xF:
+            if(nn == 0x07){
+                get_dt(x); //FX07
+            }
+            else if(nn == 0x15){
+                set_dt(x); //FX15
+            }
+            else if(nn == 0x18){
+                set_st(x); //FX18
+            }
+            else if(nn == 0x29){
+                font_char(x); //FX29
+            }
+            else if(nn == 0x33){
+                decimal_conv(x); //FX33
+            }
+            else if(nn == 0x55){
+                cache_regs(x); //FX55
+            }
+            else if(nn = 0x65){
+                fetch_regs(x); //FX65
+            }
+            else if(nn == 0x0A){
+                wait_key(x); //FX0A
+            }
+            else if(nn == 0x1E){
+                add_index(x); //FX1E
+            }
+            else throw std::runtime_error("Invalid instruction: " + code);
+            break;
+
+        default:
+            throw std::runtime_error("Unknown instruction error occured!")
+            break;
+    }
 }
-*/
