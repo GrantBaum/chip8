@@ -149,8 +149,32 @@ uint16_t Chip8::random(uint8_t x){
 }
 
 //drawing
-void Chip8::draw(){
-    //TODO
+void Chip8::draw(uint8_t x, uint8_t y, uint8_t val){
+    //starting spot wraps
+    uint8_t start_x = v.at(x) % 64;
+    uint8_t start_y = v.at(y) % 32;
+    v.at(0xF) = 0;
+
+    for(int row = 0; row < val; row++){
+        int screen_y = start_y + row;
+        if(screen_y >= 32) break; //bottom edge
+
+        uint8_t sprite_byte = memory.at(i + row);
+
+        for(int bit = 0; bit < 8; bit++){
+            int screen_x = start_x + bit;
+            if(screen_x >= 64) break; //right edge
+
+            //check this bit, leftmost first
+            bool sprite_pixel = (sprite_byte & (0x80 >> bit)) != 0;
+            if(!sprite_pixel) continue;
+
+            if(display[screen_x][screen_y]){
+                v.at(0xF) = 1; //collision
+            }
+            display[screen_x][screen_y] = !display[screen_x][screen_y]; //flip
+        }
+    }
 }
 
 //keys

@@ -89,7 +89,7 @@ class Chip8{
         uint16_t random(uint8_t x); //CXNN - set VX to RANDOM_NUM & NN
 
         //drawing
-        void draw(); //DXYN - Draw an N-row sprite from memory at I, at position (VX, VY). Pixels XOR onto the screen. VF = 1 if any pixel got turned off
+        void draw(uint8_t x, uint8_t y, uint8_t val); //DXYN - Draw an N-row sprite from memory at I, at position (VX, VY). Pixels XOR onto the screen. VF = 1 if any pixel got turned off
 
         //keys
         void skip_if_key(uint8_t x, uint8_t key); //EX9E - Skip next instruction if the key in VX is pressed
