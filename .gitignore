@@ -3,8 +3,5 @@ chip8
 test.txt
 *.o
 
-# ROMs
-*.ch8
-
 # editor
 .vscode/

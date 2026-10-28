@@ -43,13 +43,22 @@ make
 
 ## Files
 
-| File | What it does |
+| Path | What it does |
 |------|--------------|
-| `chip8.h` | The Chip8 class |
-| `chip8.cpp` | Setup, loading and the fetch loop |
-| `instructions.cpp` | One method per instruction |
-| `font.h` | Built-in font sprites |
-| `main.cpp` | Window, input and main loop |
+| `include/chip8.h` | The Chip8 class |
+| `include/font.h` | Built-in font sprites |
+| `src/chip8.cpp` | Setup, loading and the fetch loop |
+| `src/instructions.cpp` | One method per instruction |
+| `src/main.cpp` | Window, input and main loop |
+| `roms/` | Test ROMs and games to run on the emulator |
+
+## ROMs
+
+The `roms/` folder has ROMs so you can test the emulator right away. I didn't make any of them. All credit goes to their creators.
+
+- **Test ROMs** are from the [CHIP-8 test suite](https://github.com/Timendus/chip8-test-suite) by Timendus. Their license is included in `roms/`.
+
+If you made one of these and want it taken down, open an issue and I'll remove it.
 
 ## Resources
 
