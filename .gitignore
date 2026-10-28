@@ -1,6 +1,6 @@
 # build output
 chip8
-test_load
+test.txt
 *.o
 
 # ROMs

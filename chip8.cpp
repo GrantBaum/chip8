@@ -8,7 +8,7 @@
 //implementation of public methods from the class
 Chip8::Chip8(){
     i = FONT_ADDR;
-    for(int j = 0; j < font.size(); j++, i++){
+    for(size_t j = 0; j < font.size(); j++, i++){
         memory.at(i) = font.at(j);
     }
 
@@ -98,7 +98,7 @@ void Chip8::load(const char *program){
     i = 0; //reset index register.
     
 }
-
+/*
 bool Chip8::exec(){
     //process of setting the code to the instruction
     uint16_t code = memory.at(pc);
@@ -106,7 +106,5 @@ bool Chip8::exec(){
     code = code << 8;
     code = code | memory.at(pc);
     pc++;
-    
-
-    
 }
+*/
