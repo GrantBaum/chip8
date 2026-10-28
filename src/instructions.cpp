@@ -1,5 +1,6 @@
 #include "chip8.h"
 #include <random>
+#include <stdexcept>
 
 //random number gen
 uint16_t Chip8::random_num() {
@@ -16,12 +17,22 @@ void Chip8::clearScreen(){
     display = {}; //sets everything to false or 0
 }
 void Chip8::push(uint16_t val){
-    stack.push(pc);
-    pc = val; //nnn
+    if(stack.size() > 16){
+        throw std::runtime_error("Stack overflow error!")
+    }
+    else{
+        stack.push(pc);
+        pc = val; //nnn
+    }
 }
 void Chip8::pop(){
-    pc = stack.top();
-    stack.pop();
+    if(stack.empty()){
+        throw std::runtime_error("Returned from an empty stack!")
+    }
+    else{
+        pc = stack.top();
+        stack.pop();
+    }
 }
 
 //conditional skips
